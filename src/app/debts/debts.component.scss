@@ -1,0 +1,33 @@
+.widhtInput {
+    width: 90%;
+}
+
+.btnswrap {
+    display: flex;
+    flex-direction: row;
+    row-gap: 5px;
+}
+
+.rest-money {
+    float: right;
+    font-size: 20px;
+}
+
+.label-place {
+    display: flex; 
+    justify-content: flex-start;
+    font-size: 20px;
+}
+
+.detailsDebtModalClass .modal-dialog {
+    max-width: 100px;
+}
+
+.debtModalClass .modal-dialog {
+    max-width: 10px !important;
+}
+
+.restModalClass .modal-dialog {
+    max-width: 10px !important;
+}
+  

@@ -1,0 +1,101 @@
+<h1 class="text-center text-danger font-weight-bold titleTextInterface">Movies</h1>
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-md-4">
+        <input #query (keyup)="getAllMovies()" [(ngModel)]="queryName" type="text" class="form-control widhtInput" placeholder="Search by name...">
+    </div>
+    <div class="col-md-4">
+        <input #query (keyup)="getAllMovies()" [(ngModel)]="queryNote" type="text" class="form-control widhtInput" placeholder="Search by note...">
+
+        <!-- <div class="row">
+            <div class="col-md-8">
+                <input [(ngModel)]="queryDate" type="date" class="form-control widhtInput">
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary font-weight-bold" (click)="getAllMovies()">Search</button>
+                <button *ngIf="queryDate" class="btn btn-danger font-weight-bold" (click)="clear()">Clear</button>
+            </div>
+        </div>      -->
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-2"><label for="statusId" class="font-weight-bold">Status</label></div>
+            <div class="col-md-10">
+                <select [(ngModel)]="statusId" name="statusId" id="statusId" class="form-control" (click)="getAllMovies()">
+                    <option value=""></option>
+                    <option *ngFor="let statusMovie of statusMovies" [value]="statusMovie.id">
+                        {{statusMovie.status}}
+                    </option>
+                </select>
+            </div>
+        </div>     
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead class="colorHeaderTable">
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Note</th>
+                <th>Picture</th>
+                <th>
+                    <a *ngIf="user.roleAdd" (click)="newMovie()" class="btn btn-primary font-weight-bold">New</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr
+                *ngFor="let movie of (filteredMovies | sortBy: 'key' | paginate: { itemsPerPage: 8, currentPage: p })">
+                <td>{{ movie.nameMovie }}</td>
+                <td>{{ movie.date | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ movie.time }}</td>
+                <td>
+                    <span *ngIf="movie.statusId">{{ movie.status }}</span>
+                    <span *ngIf="!movie.statusId">-</span>
+                </td>
+                <td>{{ movie.note }}</td>
+                <td>
+                    <show-movie-picture [movie]="movie"></show-movie-picture>
+                </td>
+                <td style="text-align:center;">
+                    <div class="btnswrap">
+                        <button 
+                            *ngIf="user.roleUpdate" 
+                            (click)="editMovie(movie)"
+                            class="btn btn-secondary font-weight-bold"
+                            [hidden]="movie.statusId == 3">
+                            Edit
+                        </button>                        
+                        <a 
+                            *ngIf="movie.path && (movie.statusId == 1 || movie.statusId == 2)" 
+                            href="{{ movie.path }}" 
+                            target="_blank" 
+                            class="btn btn-warning font-weight-bold">
+                            Path
+                        </a>                        
+                        <button 
+                            *ngIf="user.roleDelete" 
+                            type="button" 
+                            (click)="delete(movie.key)"
+                            class="btn btn-danger font-weight-bold"
+                            [hidden]="movie.statusId == 3">
+                            Delete
+                        </button>                    
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+</div>

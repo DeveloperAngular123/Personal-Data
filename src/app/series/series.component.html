@@ -1,0 +1,103 @@
+<h1 class="text-center text-danger font-weight-bold titleTextInterface">Series</h1>
+
+<br>
+<br>
+
+<div class="row">
+    <div class="col-md-4">
+        <input #query (keyup)="getAllSeries()" [(ngModel)]="queryName" type="text" class="form-control widhtInput" placeholder="Search by name...">
+    </div>
+    <div class="col-md-4">
+        <input #query (keyup)="getAllSeries()" [(ngModel)]="queryNote" type="text" class="form-control widhtInput" placeholder="Search by note...">
+
+        <!-- <div class="row">
+            <div class="col-md-8">
+                <input [(ngModel)]="queryDate" type="date" class="form-control widhtInput">
+            </div>
+            <div class="col-md-4">
+                <button class="btn btn-primary font-weight-bold" (click)="getAllSeries()">Search</button>
+                <button *ngIf="queryDate" class="btn btn-danger font-weight-bold" (click)="clear()">Clear</button>
+            </div>
+        </div>      -->
+    </div>
+    <div class="col-md-4">
+        <div class="row">
+            <div class="col-md-2"><label for="statusId" class="font-weight-bold">Status</label></div>
+            <div class="col-md-10">
+                <select [(ngModel)]="statusId" name="statusId" id="statusId" class="form-control" (click)="getAllSeries()">
+                    <option value=""></option>
+                    <option *ngFor="let statusSerie of statusSeries" [value]="statusSerie.id">
+                        {{statusSerie.status}}
+                    </option>
+                </select>
+            </div>
+        </div>     
+    </div>
+</div>
+
+<br>
+
+<div class="row">
+    <table class="table table-striped">
+        <thead class="colorHeaderTable">
+            <tr>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Status</th>
+                <th>Note</th>
+                <th>Picture</th>
+                <th class="text-center">
+                    <a *ngIf="user.roleAdd" (click)="newSerie()" class="btn btn-primary font-weight-bold">New</a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr
+                *ngFor="let serie of (filteredSeries | sortBy: 'key' | paginate: { itemsPerPage: 8, currentPage: p })">
+                <td>{{ serie.nameSerie }}</td>
+                <td>{{ serie.date | date: 'dd/MM/yyyy' }}</td>
+                <td>{{ serie.time }}</td>
+                <td>
+                    <span *ngIf="serie.statusId">{{ serie.status }}</span>
+                    <span *ngIf="!serie.statusId">-</span>
+                </td>
+                <td>{{ serie.note }}</td>
+                <td>
+                    <show-serie-picture [serie]="serie"></show-serie-picture>
+                </td>
+                <td style="text-align:center;">
+                    <div class="btnswrap">
+                        <button 
+                            *ngIf="user.roleUpdate" 
+                            (click)="editSerie(serie)"
+                            class="btn btn-secondary font-weight-bold"
+                            [hidden]="serie.statusId == 3">
+                            Edit
+                        </button>                        
+                        <a 
+                            *ngIf="serie.path && (serie.statusId == 1 || serie.statusId == 2)" 
+                            href="{{ serie.path }}" 
+                            target="_blank" 
+                            class="btn btn-warning font-weight-bold">
+                            Path
+                        </a>                        
+                        <button 
+                            *ngIf="user.roleDelete" 
+                            type="button" 
+                            (click)="delete(serie.key)"
+                            class="btn btn-danger font-weight-bold"
+                            [hidden]="serie.statusId == 3">
+                            Delete
+                        </button>                    
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <div class="pagination">
+        <pagination-controls (pageChange)="p = $event"></pagination-controls>
+    </div>
+</div>
+
+
